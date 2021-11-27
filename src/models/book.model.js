@@ -29,6 +29,10 @@ module.exports = mongoose => {
             require: true,
             trim: true,
         },
+        image: {
+          type: String,
+          require: false,
+        },
         borrowed: {
             type: Boolean,
             require: false,

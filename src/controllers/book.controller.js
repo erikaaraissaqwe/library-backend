@@ -12,6 +12,7 @@ exports.register = (req, res) => {
         isNotEmpty(req.body.dateOfPublication) &&
         req.body.pages &&
         isNotEmpty(req.body.isbn) &&
+        isNotEmpty(req.body.image) &&
         isNotEmpty(req.body.resume))) {
             
     res.status(400).send({id: 'missing-data', msg: "Dados para cadastro insuficientes." });
@@ -24,6 +25,7 @@ exports.register = (req, res) => {
       dateOfPublication: req.body.dateOfPublication,
       pages: parseInt(req.body.pages),
       isbn: req.body.isbn,
+      image: req.body.image.trim(),
       resume: req.body.resume.trim()
     });
 
@@ -60,6 +62,7 @@ exports.update = (req, res) => {
   isNotEmpty(req.body.dateOfPublication) &&
   req.body.pages &&
   isNotEmpty(req.body.isbn) &&
+  isNotEmpty(req.body.image) &&
   isNotEmpty(req.body.resume))) {
       
     res.status(400).send({id: 'missing-data', msg: "Dados para a atualização insuficientes." });

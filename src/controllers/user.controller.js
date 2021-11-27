@@ -131,7 +131,7 @@ exports.update = async (req, res) => {
       res.status(404).send({id: 'user-not-found', msg: "Usuário não encontrado" });
     }
     else{
-      // data.password = undefined;
+      data.password = undefined;
       res.send({ data, token: generateToken({ id: data.id }) })
     }
   }).catch(err => {
@@ -154,7 +154,7 @@ exports.listOne = (req, res) => {
       if (!data) {
           res.status(404).send({id: 'user-not-found', msg: "Usuário não encontrado" });
       } else {
-          // data.password = undefined;
+          data.password = undefined;
           res.send(data);
       }
   }).catch(err => {

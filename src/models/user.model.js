@@ -19,11 +19,7 @@ module.exports = mongoose => {
         password: {
           type: String,
           require: true,
-        },
-        listBook: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'book',
-        }],
+        }
     },
     { timestamps: true }
     );
