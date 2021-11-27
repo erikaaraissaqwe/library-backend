@@ -32,6 +32,11 @@ module.exports = mongoose => {
         const hash = await bcrypt.hash(this.password, 10);
         this.password = hash;
     });
+
+    User.pre('findByIdAndUpdate', async function () {
+      const hash = await bcrypt.hash(this.password, 10);
+      this.password = hash;
+  });
     
     return mongoose.model("user", User);
 };
