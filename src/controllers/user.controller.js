@@ -62,7 +62,7 @@ exports.login = (req, res) => {
 
   User.findOne({ email: req.body.email }).then(data => {
     if (!data) {
-      res.status(404).send({id: 'user-not-found', msg: "Usuário não encontrado" });
+      res.status(404).send({id: 'user-not-found', msg: "Usuário não encontrado." });
       return;
     }
 
@@ -90,7 +90,7 @@ exports.delete = (req, res) => {
 
   User.findByIdAndRemove(id).then(data =>{
     if(!data){
-      res.status(400).send({id: 'internal-error', msg: "Não foi possível remover o usuário" });
+      res.status(400).send({id: 'internal-error', msg: "Não foi possível remover o usuário." });
     }
     else{
       data.password = undefined;
@@ -128,7 +128,7 @@ exports.update = async (req, res) => {
 
   User.findByIdAndUpdate(id, req.body).then(data => {
     if(!data){
-      res.status(404).send({id: 'user-not-found', msg: "Usuário não encontrado" });
+      res.status(404).send({id: 'user-not-found', msg: "Usuário não encontrado." });
     }
     else{
       data.password = undefined;
@@ -152,7 +152,7 @@ exports.listOne = (req, res) => {
 
   User.findById(id).then(data => {
       if (!data) {
-          res.status(404).send({id: 'user-not-found', msg: "Usuário não encontrado" });
+          res.status(404).send({id: 'user-not-found', msg: "Usuário não encontrado." });
       } else {
           data.password = undefined;
           res.send(data);

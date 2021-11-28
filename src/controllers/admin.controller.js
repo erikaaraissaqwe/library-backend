@@ -29,7 +29,7 @@ exports.login = (req, res) => {
 
   Admin.findOne({ email: req.body.email }).then(data => {
     if (!data) {
-      res.status(404).send({id: 'admin-not-found', msg: "Administrador não encontrado" });
+      res.status(404).send({id: 'admin-not-found', msg: "Administrador não encontrado." });
       return;
     }
 

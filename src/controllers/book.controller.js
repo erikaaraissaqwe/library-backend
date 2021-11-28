@@ -78,7 +78,7 @@ exports.update = (req, res) => {
 
   Book.findByIdAndUpdate(id, req.body).then(data =>{
     if(!data){
-      res.status(400).send({id: 'book-not-found', msg: "Livro não cadastrado" });
+      res.status(400).send({id: 'book-not-found', msg: "Livro não cadastrado." });
     }
     else{
       console.log(data);
@@ -102,7 +102,7 @@ exports.listOne = (req, res) => {
 
   Book.findById(id).then(data => {
       if (!data) {
-          res.status(404).send({id: 'book-not-found', msg: "Livro não cadastrado" });
+          res.status(404).send({id: 'book-not-found', msg: "Livro não cadastrado." });
       } else {
           res.send(data);
       }
