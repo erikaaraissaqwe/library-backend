@@ -40,7 +40,7 @@ exports.login = (req, res) => {
       }
 
       data.password = undefined;
-      res.send({ data, token: generateToken({ id: data.id }), expiresIn: authConfig.expiresIn + new Date().getTime() })
+      res.send({ data, token: generateToken({ id: data.id }), expiresIn: authConfig.expiresIn + Date.now() })
     });
   }).catch(err => {
     res.status(500).send({id: 'internal-error', msg: err.message });
