@@ -63,6 +63,7 @@ exports.update = (req, res) => {
   req.body.pages &&
   isNotEmpty(req.body.isbn) &&
   isNotEmpty(req.body.image) &&
+  isNotEmpty(req.body.borrowed) &&
   isNotEmpty(req.body.resume))) {
       
     res.status(400).send({id: 'missing-data', msg: "Dados para a atualização insuficientes." });
