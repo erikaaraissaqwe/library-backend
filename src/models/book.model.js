@@ -6,11 +6,11 @@ module.exports = mongoose => {
           require: true,
           trim: true,
         },
-        authors: [{
+        author: {
           type: String,
           require: true,
           trim: true,
-        }],
+        },
         dateOfPublication: {
             type: String,
             trim: true,
