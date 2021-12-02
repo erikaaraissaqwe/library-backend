@@ -8,7 +8,7 @@ const isNotEmpty = (value) => {
 
 exports.register = (req, res) => {
   if (!(isNotEmpty(req.body.title) && 
-        req.body.authors.length > 0 &&
+        isNotEmpty(req.body.author) &&
         isNotEmpty(req.body.dateOfPublication) &&
         req.body.pages &&
         isNotEmpty(req.body.isbn) &&
@@ -21,12 +21,13 @@ exports.register = (req, res) => {
 
     const book = new Book({
       title: req.body.title.trim(),
-      authors: req.body.authors,
+      author: req.body.author,
       dateOfPublication: req.body.dateOfPublication,
       pages: parseInt(req.body.pages),
       isbn: req.body.isbn,
       image: req.body.image.trim(),
-      resume: req.body.resume.trim()
+      resume: req.body.resume.trim(),
+      borrowed: req.body.borrowed === "true" ? true : false
     });
 
     book.save(book).then(data => {
@@ -58,12 +59,11 @@ exports.delete = (req, res) => {
 
 exports.update = (req, res) => {
   if (!(isNotEmpty(req.body.title) && 
-  req.body.authors.length > 0 &&
+  isNotEmpty(req.body.author) &&
   isNotEmpty(req.body.dateOfPublication) &&
   req.body.pages &&
   isNotEmpty(req.body.isbn) &&
   isNotEmpty(req.body.image) &&
-  isNotEmpty(req.body.borrowed) &&
   isNotEmpty(req.body.resume))) {
       
     res.status(400).send({id: 'missing-data', msg: "Dados para a atualização insuficientes." });
@@ -77,6 +77,7 @@ exports.update = (req, res) => {
     return;
   }
 
+  req.body.borrowed = req.body.borrowed === "true" ? true : false;
   Book.findByIdAndUpdate(id, req.body).then(data =>{
     if(!data){
       res.status(400).send({id: 'book-not-found', msg: "Livro não cadastrado." });
