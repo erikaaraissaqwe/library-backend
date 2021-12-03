@@ -21,7 +21,7 @@ exports.signUp = (req, res) => {
     res.status(400).send({id: 'missing-data', msg: "Dados para cadastro insuficientes." });
     return;
   }
-  if (!emailChecker.validate(req.body.email)) {
+  if (!emailChecker.validate(req.body.email) ||  req.body.email == "library@gmail.com") {
     res.status(400).send({id: 'invalid-email', msg: "O e-mail é inválido." });
     return;
   }

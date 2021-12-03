@@ -90,8 +90,18 @@ exports.update = (req, res) => {
   });
 }
 
+
 exports.listAll = (req, res) => {
+
   Book.find().then(data => {
+    res.send({ data });
+  }).catch(err => {
+    res.status(500).send({id: 'internal-error', msg: err.message });
+  });
+}
+
+exports.listAllBorrowed = (req, res) => {
+  Book.find({borrowed: true}).then(data => {
     res.send({ data });
   }).catch(err => {
     res.status(500).send({id: 'internal-error', msg: err.message });

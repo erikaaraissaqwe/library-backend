@@ -12,6 +12,8 @@ module.exports = app => {
 
     router.get('/listAll', authMiddleware.privateUser, book.listAll);
 
+    router.get('/listAllBorrowed', authMiddleware.privateUser, book.listAllBorrowed);
+
     router.get('/:id', authMiddleware.privateUser, book.listOne);
 
     router.delete('/:id', authMiddleware.privateUser, book.delete);
