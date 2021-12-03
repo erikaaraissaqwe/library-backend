@@ -83,7 +83,6 @@ exports.update = (req, res) => {
       res.status(400).send({id: 'book-not-found', msg: "Livro não cadastrado." });
     }
     else{
-      console.log(data);
       res.send({ data });
     }
   }).catch(err => {
