@@ -36,6 +36,7 @@ app.get("/", (req, res) => {
 require("./src/routes/user.routes")(app);
 require("./src/routes/book.routes")(app);
 require("./src/routes/admin.routes")(app);
+require("./src/routes/bookUser.routes")(app);
 
 const PORT = process.env.PORT || 3333;
   app.listen(PORT, () => {

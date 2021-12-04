@@ -20,7 +20,7 @@ module.exports = mongoose => {
         },
         actualDeliveryDate: {
             type: String,
-            require: true,
+            require: false,
             trim: true,
         },
     },
