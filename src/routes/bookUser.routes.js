@@ -7,11 +7,15 @@ module.exports = app => {
     
     router.post('/loan', authMiddleware.privateUser, bookUser.loan);
 
-    router.get('/listAllLateBooks', bookUser.listAllLateBooks);
+    router.get('/listAllLateBooks', authMiddleware.privateUser, bookUser.listAllLateBooks);
 
     router.get('/listLateBooksByUserId', authMiddleware.privateUser, bookUser.listLateBooksByUserId);
 
-    router.get('/listAll', bookUser.listAll);
+    router.get('/listAll', authMiddleware.privateUser, bookUser.listAll);
+
+    router.get('/listAllByUserId/:id', authMiddleware.privateUser, bookUser.listAllByUserId);
+   
+    router.get('/listLateBooksByUserId/:id', authMiddleware.privateUser, bookUser.listLateBooksByUserId);
 
     router.get('/:id', authMiddleware.privateUser, bookUser.listOne);
 

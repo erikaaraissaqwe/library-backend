@@ -1,7 +1,7 @@
 
 const { user } = require("../models");
 const db = require("../models");
-const BookUser = db.bookUser ;
+const BookUser = db.bookUser;
 const Book = db.book;
 const User = db.user;
 
@@ -30,7 +30,7 @@ exports.loan = (req, res) => {
 
 
     bookUser.save(bookUser).then(data => {
-      updateBook(req.body.bookId);
+      updateBook(req.body.bookId, true);
       res.send({ data });
     }).catch(err => {
         res.status(500).send({id: 'internal-error', msg: err.message });
@@ -52,19 +52,33 @@ exports.listAll = (req, res) => {
   });
 }
 
+exports.listAllByUserId = (req, res) => {
+  const id = req.params.id;
+  BookUser.find({userId: id}).then(async data => {
+   for (const key in data) {
+     let book = await Book.findOne(data[key].bookId);
+     data[key].bookId = book
+   }
+   res.send({ data });
+ }).catch(err => {
+   res.status(500).send({id: 'internal-error', msg: err.message });
+ });
+}
+
 exports.listAllLateBooks = (req, res) => {
   BookUser.find().then(async data => {
     let dataFilter = []
     for (const key in data) {
-      if (Date.parse(data[key].expectedDeliveryDate) < Date.now()) {
-        
-        //populando livros e pessoas
+      let diff = Date.now() - Date.parse(data[key].expectedDeliveryDate);
+      let diffInDays = diff/(1000*3600*24);
+      if (diffInDays >= 1) {
         let book = await Book.findOne(data[key].bookId);
         let user = await User.findOne(data[key].userId);
         data[key].bookId = book
         user.password=undefined;
         data[key].userId = user
         dataFilter[dataFilter.length] = data[key];
+        
       }
     }
     res.send({"data" : dataFilter});
@@ -75,12 +89,14 @@ exports.listAllLateBooks = (req, res) => {
 }
 
 exports.listLateBooksByUserId = (req, res) => {
-  BookUser.find({_id: id}).then(async data => {
+  const id = req.params.id;
+  BookUser.find({userId: id}).then(async data => {
     let dataFilter = [];
     for (const key in data) {
-      if (Date.parse(data[key].expectedDeliveryDate) < Date.now()) {
-        
-        //populando livros e pessoas
+      let diff = Date.now() - Date.parse(data[key].expectedDeliveryDate);
+      let diffInDays = diff/(1000*3600*24);
+      if (diffInDays >= 1) {
+        //populando livros
         let book = await Book.findOne(data[key].bookId);
         data[key].bookId = book
         dataFilter[dataFilter.length] = data[key];
@@ -95,7 +111,6 @@ exports.listLateBooksByUserId = (req, res) => {
 
 exports.listOne = (req, res) => {
   const id = req.params.id;
-
   BookUser.findById(id).then(async data => {
       if (!data) {
           res.status(404).send({id: 'book-not-found', msg: "Empréstimo inexistente." });
@@ -113,10 +128,6 @@ exports.listOne = (req, res) => {
   });
 };
 
-async function updateBook(id){
-  await Book.updateOne({_id:id},{$set: {'borrowed':true}});
-}
-
-async function updateBook(id){
-  await Book.updateOne({_id:id},{$set: {'borrowed':true}});
+async function updateBook(id, borrowed){
+  await Book.updateOne({_id:id},{$set: {'borrowed': borrowed}});
 }

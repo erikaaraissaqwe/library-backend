@@ -5,6 +5,7 @@ const emailChecker = require("email-validator");
 
 const db = require("../models");
 const User = db.user;
+const BookUser = db.bookUser;
 
 const isNotEmpty = (value) => {
   return value && value.trim().length > 0;
@@ -80,11 +81,19 @@ exports.login = (req, res) => {
   });
 }
 
-exports.delete = (req, res) => {
+exports.delete =  async  (req, res) => {
   const id = req.params.id;
 
   if(!id){
     res.status(400).send({id: 'missing-data', msg: "Dados para a deleção insuficientes." });
+    return;
+  }
+
+  let bookUser = await BookUser.findOne({userId: id});
+  console.log(bookUser);
+
+  if(bookUser){
+    res.status(400).send({id: 'user-using', msg: "Este usuário não pode ser removido pois ele está com livros." });
     return;
   }
 

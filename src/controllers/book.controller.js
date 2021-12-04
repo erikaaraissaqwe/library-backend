@@ -1,6 +1,7 @@
 
 const db = require("../models");
 const Book = db.book;
+const BookUser = db.bookUser;
 
 const isNotEmpty = (value) => {
   return value && value.trim().length > 0;
@@ -37,11 +38,19 @@ exports.register = (req, res) => {
     });
 }
 
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
   const id = req.params.id;
 
   if(!id){
     res.status(400).send({id: 'missing-data', msg: "Dados para a deleção insuficientes." });
+    return;
+  }
+
+  let bookUser = await BookUser.findOne({bookId: id});
+  console.log(bookUser);
+
+  if(bookUser){
+    res.status(400).send({id: 'book-using', msg: "Este livro não pode ser removido pois ele está emprestado." });
     return;
   }
 
