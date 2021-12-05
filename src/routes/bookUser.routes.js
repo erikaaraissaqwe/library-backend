@@ -19,5 +19,7 @@ module.exports = app => {
 
     router.get('/:id', authMiddleware.privateUser, bookUser.listOne);
 
+    router.delete('/:id', authMiddleware.privateUser, bookUser.delete);
+
     app.use('/api/userBook', router);
 };

@@ -38,7 +38,7 @@ require("./src/routes/book.routes")(app);
 require("./src/routes/admin.routes")(app);
 require("./src/routes/bookUser.routes")(app);
 
-const PORT = process.env.PORT || 3333;
+const PORT = process.env.PORT || 8085;
   app.listen(PORT, () => {
     console.log(`Servidor está executando na porta ${PORT}.`);
   });

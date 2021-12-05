@@ -109,6 +109,26 @@ exports.listLateBooksByUserId = (req, res) => {
   });
 }
 
+exports.delete = (req, res) => {
+  const id = req.params.id;
+
+  if(!id){
+    res.status(400).send({id: 'missing-data', msg: "Dados para a deleção insuficientes." });
+    return;
+  }
+
+  BookUser.findByIdAndRemove(id).then(data =>{
+    if(!data){
+      res.status(400).send({id: 'internal-error', msg: "Não foi possível remover o empréstimo." });
+    }
+    else{
+      res.send({ data });
+    }
+  }).catch(err => {
+    res.status(500).send({id: 'internal-error', msg: err.message });
+  });
+}
+
 exports.listOne = (req, res) => {
   const id = req.params.id;
   BookUser.findById(id).then(async data => {
