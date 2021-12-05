@@ -90,7 +90,6 @@ exports.delete =  async  (req, res) => {
   }
 
   let bookUser = await BookUser.findOne({userId: id});
-  console.log(bookUser);
 
   if(bookUser){
     res.status(400).send({id: 'user-using', msg: "Este usuário não pode ser removido pois ele está com livros." });

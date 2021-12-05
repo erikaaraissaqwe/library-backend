@@ -47,8 +47,7 @@ exports.delete = async (req, res) => {
   }
 
   let bookUser = await BookUser.findOne({bookId: id});
-  console.log(bookUser);
-
+  
   if(bookUser){
     res.status(400).send({id: 'book-using', msg: "Este livro não pode ser removido pois ele está emprestado." });
     return;

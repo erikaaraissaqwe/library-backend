@@ -9,13 +9,21 @@ const isNotEmpty = (value) => {
   return value && value.trim().length > 0;
 }
 
-exports.loan = (req, res) => {
+exports.loan = async (req, res) => {
   if (!(isNotEmpty(req.body.bookId) && 
         isNotEmpty(req.body.userId) &&
         isNotEmpty(req.body.loadDate) &&
         isNotEmpty(req.body.expectedDeliveryDate))) {
             
     res.status(400).send({id: 'missing-data', msg: "Dados para o empréstimo insuficientes." });
+    return;
+  }
+
+  let book = await Book.findOne({_id: req.body.bookId});
+  let user = await User.findOne({_id: req.body.userId});
+
+  if((!book) || (!user)){
+    res.status(400).send({id: 'missing-data', msg: "Não foi possível realizar o emprestímo." });
     return;
   }
 
@@ -40,8 +48,8 @@ exports.loan = (req, res) => {
 exports.listAll = (req, res) => {
    BookUser.find().then(async data => {
     for (const key in data) {
-      let book = await Book.findOne(data[key].bookId);
-      let user = await User.findOne(data[key].userId);
+      let book = await Book.findOne({_id: data[key].bookId});
+      let user = await User.findOne({_id: data[key].userId});
       data[key].bookId = book
       user.password=undefined;
       data[key].userId = user
@@ -56,8 +64,8 @@ exports.listAllByUserId = (req, res) => {
   const id = req.params.id;
   BookUser.find({userId: id}).then(async data => {
    for (const key in data) {
-     let book = await Book.findOne(data[key].bookId);
-     data[key].bookId = book
+    let book = await Book.findOne({_id: data[key].bookId});
+    data[key].bookId = book;
    }
    res.send({ data });
  }).catch(err => {
@@ -72,8 +80,8 @@ exports.listAllLateBooks = (req, res) => {
       let diff = Date.now() - Date.parse(data[key].expectedDeliveryDate);
       let diffInDays = diff/(1000*3600*24);
       if (diffInDays >= 1) {
-        let book = await Book.findOne(data[key].bookId);
-        let user = await User.findOne(data[key].userId);
+        let book = await Book.findOne({_id: data[key].bookId});
+        let user = await User.findOne({_id: data[key].userId});
         data[key].bookId = book
         user.password=undefined;
         data[key].userId = user
@@ -97,7 +105,7 @@ exports.listLateBooksByUserId = (req, res) => {
       let diffInDays = diff/(1000*3600*24);
       if (diffInDays >= 1) {
         //populando livros
-        let book = await Book.findOne(data[key].bookId);
+        let book = await Book.findOne({_id: data[key].bookId});
         data[key].bookId = book
         dataFilter[dataFilter.length] = data[key];
       }
@@ -111,19 +119,19 @@ exports.listLateBooksByUserId = (req, res) => {
 
 exports.delete = (req, res) => {
   const id = req.params.id;
-  const id_book = req.params.id_book;
 
   if(!id){
-    res.status(400).send({id: 'missing-data', msg: "Dados para a deleção insuficientes." });
-    updateBook(id_book, true);
+    res.status(400).send({id: 'missing-data', msg: "Dados para a devolução insuficientes." });
+    
     return;
   }
 
   BookUser.findByIdAndRemove(id).then(data =>{
     if(!data){
-      res.status(400).send({id: 'internal-error', msg: "Não foi possível remover o empréstimo." });
+      res.status(400).send({id: 'internal-error', msg: "Não foi possível devolver o empréstimo." });
     }
     else{
+      updateBook(data.bookId, false);
       res.send({ data });
     }
   }).catch(err => {
@@ -138,8 +146,8 @@ exports.listOne = (req, res) => {
           res.status(404).send({id: 'book-not-found', msg: "Empréstimo inexistente." });
       } else {
           //populando livros e pessoas
-          let book = await Book.findOne(data.bookId);
-          let user = await User.findOne(data.userId);
+          let book = await Book.findOne({_id: data.bookId});
+          let user = await User.findOne({_id: data.userId});
           data.bookId = book
           user.password=undefined;
           data.userId = user
@@ -150,6 +158,6 @@ exports.listOne = (req, res) => {
   });
 };
 
-async function updateBook(id, borrowed){
-  await Book.updateOne({_id:id},{$set: {'borrowed': borrowed}});
+async function updateBook(id, borrowedBool){
+  await Book.updateOne({_id:id},{$set: {'borrowed': borrowedBool}});
 }
