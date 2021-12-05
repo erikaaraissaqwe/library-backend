@@ -111,9 +111,11 @@ exports.listLateBooksByUserId = (req, res) => {
 
 exports.delete = (req, res) => {
   const id = req.params.id;
+  const id_book = req.params.id_book;
 
   if(!id){
     res.status(400).send({id: 'missing-data', msg: "Dados para a deleção insuficientes." });
+    updateBook(id_book, true);
     return;
   }
 
